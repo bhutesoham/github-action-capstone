@@ -1,12 +1,12 @@
 name: health-check
 
 on:
-  workflow_dispatch:
   schedule:
     - cron: "0 */12 * * *" #min hrs dayofmonth month dayofweek
 
-  inputs:
-    image_name:
+  workflow_dispatch:
+    inputs:
+      image_name:
       required: true
       type: string
 

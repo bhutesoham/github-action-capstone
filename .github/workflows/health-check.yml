@@ -46,12 +46,9 @@ jobs:
         run: |
           docker ps
           docker logs test-container
-
       - name: Check health endpoint
         run: |
-          echo "DEBUG: about to curl"
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/health) || true
-          echo "DEBUG: STATUS is '$STATUS'"
 
           if [ "$STATUS" == "200" ]; then
             RESULT="PASSED"
@@ -59,20 +56,23 @@ jobs:
             RESULT="FAILED"
           fi
 
-          echo "DEBUG: RESULT is '$RESULT'"
+          echo "## Health Check Report"                                                    >> $GITHUB_STEP_SUMMARY
+          echo "| Field  | Value |"                                                        >> $GITHUB_STEP_SUMMARY
+          echo "| ------ | ----- |"                                                        >> $GITHUB_STEP_SUMMARY
+          echo "| Image  | $DOCKERHUB_USER/${{ inputs.image_name }}:${{ inputs.tag }} |"  >> $GITHUB_STEP_SUMMARY
+          echo "| Status | ${RESULT} |"                                                    >> $GITHUB_STEP_SUMMARY
+          echo "| HTTP   | ${STATUS} |"                                                    >> $GITHUB_STEP_SUMMARY
+          echo "| Time   | $(date) |"                                                      >> $GITHUB_STEP_SUMMARY
+          echo "| Commit | ${{ github.sha }} |"                                            >> $GITHUB_STEP_SUMMARY
 
-          echo "## Health Check Report"                         >> $GITHUB_STEP_SUMMARY
-          echo "| Field  | Value |"                             >> $GITHUB_STEP_SUMMARY
-          echo "| ------ | ----- |"                             >> $GITHUB_STEP_SUMMARY
-          echo "| Image  | ${{ vars.DOCKERHUB_USER }}/${{ inputs.image_name }}:${{ inputs.tag }} |"  >> $GITHUB_STEP_SUMMARY
-          echo "| Status | ${RESULT} |"                           >> $GITHUB_STEP_SUMMARY
-          echo "| HTTP   | ${STATUS} |"                           >> $GITHUB_STEP_SUMMARY
-          echo "| Time   | $(date) |"                           >> $GITHUB_STEP_SUMMARY
-          echo "| Commit | ${{ github.sha }} |"                 >> $GITHUB_STEP_SUMMARY
+          echo "=== DEBUG: raw summary file ==="
+          cat $GITHUB_STEP_SUMMARY
+          echo "=== DEBUG: end ==="
 
           if [ "$STATUS" != "200" ]; then
             exit 1
           fi
+
       - name: Print container logs on failure
         if: failure()
         run: docker logs test-container
@@ -82,10 +82,3 @@ jobs:
         run: |
           docker stop test-container
           docker rm test-container
-
-      - name: Debug summary file
-        run: |
-          echo "=== SUMMARY PATH IS ==="
-          echo "$GITHUB_STEP_SUMMARY"
-          ls -la "$GITHUB_STEP_SUMMARY"
-          cat "$GITHUB_STEP_SUMMARY"

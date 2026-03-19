@@ -82,3 +82,5 @@ jobs:
         run: |
           docker stop test-container
           docker rm test-container
+      - name: Debug summary file
+        run: cat $GITHUB_STEP_SUMMARY

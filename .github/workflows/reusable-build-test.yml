@@ -34,7 +34,7 @@ jobs:
 
       - name: Run flake8 test only if run_test is true
         id: check_result
-        if: $ {{ inputs.run_tests == true }}
+        if: ${{ inputs.run_tests == true }}
         run: |
           flake8 app.py tests/
           if [ $? -eq 0]; then

@@ -30,8 +30,7 @@ jobs:
   deploy:
     needs: [call-docker]
     runs-on: ubuntu-latest
-    env:
-      - production
+    environment: production
     steps:
       - name: Deploying image URL
         run: |

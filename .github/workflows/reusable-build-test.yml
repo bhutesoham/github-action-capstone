@@ -1,0 +1,38 @@
+name: Build & Test
+
+on:
+  workflow_call:
+
+inputs:
+  matrix:
+    python-version: ["3.10", "3.11", "3.12"]
+
+  run_tests:
+    default: true
+
+outputs:
+  test_result:
+    value: $ {{ steps.check_result.output.result }}
+
+jobs:
+  steps:
+    - name: Check out Code
+      uses: actions/checkout@v4
+
+    - name: Setup language run time
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Run flake8 test only if run_test is true
+      id: check_result
+      if: $ {{ inputs.run_tests }} == true
+      run: |
+        flake8 app.py tests/
+        echo "result=$ {{ steps.check_result.outputs.test_result }}" >> $GITHUB_OUTPUT
+
+    - name: Set output with value passed or failed
+      run: echo "test result is $GITHUB_OUTPUT"

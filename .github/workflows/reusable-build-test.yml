@@ -9,7 +9,7 @@ on:
 
     outputs:
       test_result:
-        value: $ {{ jobs.build-test.outputs.test_result }}
+        value: ${{ jobs.build-test.outputs.test_result }}
 
 jobs:
   build-test:

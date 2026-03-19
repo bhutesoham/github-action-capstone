@@ -10,10 +10,10 @@ on:
         required: true
         type: string
 
-    tag:
-      required: true
-      type: string
-      default: "latest"
+      tag:
+        required: true
+        type: string
+        default: "latest"
 
 jobs:
   health-check:

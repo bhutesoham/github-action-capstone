@@ -37,7 +37,7 @@ jobs:
         if: ${{ inputs.run_tests == true }}
         run: |
           flake8 app.py tests/
-          if [ $? -eq 0]; then
+          if [ $? -eq 0 ]; then
            echo "result=passed" >> $GITHUB_OUTPUT
           else 
            echo "result=failed" >> $GITHUB_OUTPUT

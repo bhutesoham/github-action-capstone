@@ -5,12 +5,33 @@ on:
     branches: [main]
 
 jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      short_sha: ${{ steps.sha.outputs.short }}
+    steps:
+      - name: Set short SHA
+        id: sha
+        run: echo "short=sha-$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+
   call-build-test:
     uses: ./.gihub/workflow/reusable-build-test.yml
+    with:
+      run_tests: true
 
   call-docker:
     needs: [call-build-test]
-    runs-on: ubuntu-latest
+    uses: ./.github/workflow/reusable-docker.yml
+    with:
+      image_name: github-action-capstone
+      tag: "latest,${{ needs.prepare.outputs.short_sha }}"
+      # expressions like ${{ github.sha }} are not allowed directly inside with: of a uses: job in the caller
 
+  deploy:
+    needs: [call-docker]
+    runs-on: ubuntu-latest
+    env:
+      - production
     steps:
-      - name:
+      - name: Deploying image URL
+        run: echo "Deploying image   to production"

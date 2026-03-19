@@ -11,12 +11,20 @@ on:
         type: string
         required: true
 
+    outputs:
+      image_url: # ← what the caller reads
+        value: ${{ jobs.docker-build-push.outputs.image_url }}
+
 jobs:
   docker-build-push:
     runs-on: ubuntu-latest
+
     env:
       DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
       DOCKER_TAG: ${{ inputs.tag }}
+
+    outputs:
+      image_url: ${{ steps.set_url.outputs.image_url }} # ← feeds workflow_call output
 
     steps:
       - name: Code checkout
@@ -28,18 +36,24 @@ jobs:
           username: ${{ vars.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build the docker image
+      - name: Build and tag image. # There also an alternate way for it (reusable generates SHA)
         run: |
-          docker build \
-          -t ${{ vars.DOCKERHUB_USER }}/${{ inputs.image_name }}:$DOCKER_TAG \
-          -t ${{ vars.DOCKERHUB_USER }}/${{ inputs.image_name }}:latest .
+          IFS=',' read -ra TAGS <<< "${{ inputs.tag }}"
+          BUILD_CMD="docker build"
+          for t in "${TAGS[@]}"; do
+            BUILD_CMD="$BUILD_CMD -t $DOCKERHUB_USER/${{ inputs.image_name }}:$t"
+          done
+          BUILD_CMD="$BUILD_CMD ."
+          eval $BUILD_CMD
 
-      - name: Push to Docker Hub
-        #if: github.ref == 'refs/heads/main'
-        #continue-on-error: false
+      - name: Push all tags
         run: |
-          docker push ${{ vars.DOCKERHUB_USER }}/${{ inputs.image_name }}:${DOCKER_TAG}
-          docker push ${{ vars.DOCKERHUB_USER }}/${{ inputs.image_name }}:latest
+          IFS=',' read -ra TAGS <<< "${{ inputs.tag }}"
+          for t in "${TAGS[@]}"; do
+            docker push $DOCKERHUB_USER/${{ inputs.image_name }}:$t
+          done
 
       - name: Output image URL
-        run: echo "Pushed $DOCKERHUB_USER/${{ inputs.image_name }}:$DOCKER_TAG"
+        id: set_url
+        run: |
+          echo "image_url=$DOCKERHUB_USER/${{ inputs.image_name }}:$DOCKER_TAG" >>$GITHUB_OUTPUT

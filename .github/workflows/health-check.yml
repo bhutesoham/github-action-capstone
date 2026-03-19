@@ -65,10 +65,6 @@ jobs:
           echo "| Time   | $(date) |"                                                      >> $GITHUB_STEP_SUMMARY
           echo "| Commit | ${{ github.sha }} |"                                            >> $GITHUB_STEP_SUMMARY
 
-          echo "=== DEBUG: raw summary file ==="
-          cat $GITHUB_STEP_SUMMARY
-          echo "=== DEBUG: end ==="
-
           if [ "$STATUS" != "200" ]; then
             exit 1
           fi

@@ -41,3 +41,4 @@ jobs:
            echo "result=passed" >> $GITHUB_OUTPUT
           else 
            echo "result=failed" >> $GITHUB_OUTPUT
+          fi

@@ -2,17 +2,16 @@ name: Build & Test
 
 on:
   workflow_call:
+    inputs:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
 
-inputs:
-  matrix:
-    python-version: ["3.10", "3.11", "3.12"]
+    run_tests:
+      default: true
 
-  run_tests:
-    default: true
-
-outputs:
-  test_result:
-    value: $ {{ steps.check_result.output.result }}
+    outputs:
+      test_result:
+        value: $ {{ steps.check_result.output.result }}
 
 jobs:
   steps:

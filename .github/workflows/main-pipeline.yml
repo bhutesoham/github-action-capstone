@@ -15,17 +15,17 @@ jobs:
         run: echo "short=sha-$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
 
   call-build-test:
-    uses: ./.gihub/workflow/reusable-build-test.yml
+    needs: [prepare]
+    uses: ./.github/workflows/reusable-build-test.yml
     with:
       run_tests: true
 
   call-docker:
-    needs: [call-build-test]
-    uses: ./.github/workflow/reusable-docker.yml
+    needs: [call-build-test, prepare]
+    uses: ./.github/workflows/reusable-docker.yml
     with:
-      image_name: github-action-capstone
+      image_name: github-actions-capstone
       tag: "latest,${{ needs.prepare.outputs.short_sha }}"
-      # expressions like ${{ github.sha }} are not allowed directly inside with: of a uses: job in the caller
 
   deploy:
     needs: [call-docker]
@@ -34,4 +34,4 @@ jobs:
     steps:
       - name: Deploying image URL
         run: |
-          echo "Deploying image ${{ needs.docker-build-push.outputs.image_url }} to production"
+          echo "Deploying image ${{ needs.call-docker.outputs.image_url }} to production"

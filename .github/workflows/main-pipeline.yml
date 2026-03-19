@@ -1,0 +1,16 @@
+name: Main-pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  call-build-test:
+    uses: ./.gihub/workflow/reusable-build-test.yml
+
+  call-docker:
+    needs: [call-build-test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name:

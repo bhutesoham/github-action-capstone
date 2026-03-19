@@ -41,7 +41,7 @@ jobs:
           IFS=',' read -ra TAGS <<< "${{ inputs.tag }}"
           BUILD_CMD="docker build"
           for t in "${TAGS[@]}"; do
-            BUILD_CMD="$BUILD_CMD -t $DOCKERHUB_USER/${{ inputs.image_name }}:$t"
+            BUILD_CMD="$BUILD_CMD -t ${{ vars.DOCKERHUB_USER }}/${{ inputs.image_name }}:$t"
           done
           BUILD_CMD="$BUILD_CMD ."
           eval $BUILD_CMD
@@ -50,10 +50,10 @@ jobs:
         run: |
           IFS=',' read -ra TAGS <<< "${{ inputs.tag }}"
           for t in "${TAGS[@]}"; do
-            docker push $DOCKERHUB_USER/${{ inputs.image_name }}:$t
+            docker push ${{ vars.DOCKERHUB_USER }}/${{ inputs.image_name }}:$t
           done
 
       - name: Output image URL
         id: set_url
         run: |
-          echo "image_url=$DOCKERHUB_USER/${{ inputs.image_name }}:$DOCKER_TAG" >>$GITHUB_OUTPUT
+          echo "image_url=${{ vars.DOCKERHUB_USER }}/${{ inputs.image_name }}:$DOCKER_TAG" >>$GITHUB_OUTPUT

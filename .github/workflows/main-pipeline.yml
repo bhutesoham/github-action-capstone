@@ -26,6 +26,7 @@ jobs:
     with:
       image_name: github-actions-capstone
       tag: "latest,${{ needs.prepare.outputs.short_sha }}"
+    secrets: inherit
 
   deploy:
     needs: [call-docker]

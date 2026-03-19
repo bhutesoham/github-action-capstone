@@ -51,8 +51,6 @@ jobs:
             exit 1
           fi
 
-      - name: write the summary
-        run: |
           echo "## Health Check Report" >> $GITHUB_STEP_SUMMARY
           echo "| Field   | Value |"                                                               >> $GITHUB_STEP_SUMMARY
           echo "| ------- | ----- |"                                                               >> $GITHUB_STEP_SUMMARY

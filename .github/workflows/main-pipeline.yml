@@ -35,4 +35,4 @@ jobs:
     steps:
       - name: Deploying image URL
         run: |
-          echo "Deploying image ${{ needs.docker-build-push.outputs.image_url }} to production"
+          echo "Deploying image ${{ needs.call-docker.outputs.image_url }} to production"

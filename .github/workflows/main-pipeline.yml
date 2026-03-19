@@ -15,7 +15,7 @@ jobs:
         run: echo "short=sha-$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
 
   call-build-test:
-    uses: ./.gihub/workflow/reusable-build-test.yml
+    uses: ./.github/workflow/reusable-build-test.yml
     with:
       run_tests: true
 

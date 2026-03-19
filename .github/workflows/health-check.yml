@@ -82,5 +82,10 @@ jobs:
         run: |
           docker stop test-container
           docker rm test-container
+
       - name: Debug summary file
-        run: cat $GITHUB_STEP_SUMMARY
+        run: |
+          echo "=== SUMMARY PATH IS ==="
+          echo "$GITHUB_STEP_SUMMARY"
+          ls -la "$GITHUB_STEP_SUMMARY"
+          cat "$GITHUB_STEP_SUMMARY"

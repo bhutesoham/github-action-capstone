@@ -54,11 +54,11 @@ jobs:
           echo "## Health Check Report" >> $GITHUB_STEP_SUMMARY
           echo "| Field   | Value |"                                                               >> $GITHUB_STEP_SUMMARY
           echo "| ------- | ----- |"                                                               >> $GITHUB_STEP_SUMMARY
-          echo "| Image   | ${{ vars.DOCKERHUB_USER }}/${{ inputs.image_name }}:${{ inputs.tag }} |"          >> $GITHUB_STEP_SUMMARY
+          echo "| Image   | ${{ vars.DOCKERHUB_USER }}/${{ inputs.image_name }}:${{ inputs.tag }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Status  | $RESULT |"                                                             >> $GITHUB_STEP_SUMMARY
           echo "| HTTP    | $STATUS |"                                                             >> $GITHUB_STEP_SUMMARY
           echo "| Time    | $(date) |"                                                             >> $GITHUB_STEP_SUMMARY
-          echo "| Commit  | ${{ github.sha }} |"
+          echo "| Commit  | ${{ github.sha }} |"                                                   >> $GITHUB_STEP_SUMMARY
 
       - name: Print container logs on failure
         if: failure()

@@ -82,4 +82,4 @@ jobs:
       - name: Output image URL
         id: set_url
         run: |
-          echo "image_url=${{ vars.DOCKERHUB_USER }}/${{ inputs.image_name }}:$DOCKER_TAG" >>$GITHUB_OUTPUT
+          echo "Full image URL= https://hub.docker.com/repository/docker/${{ vars.DOCKERHUB_USER }}/${{ inputs.image_name }}:latest" >>$GITHUB_OUTPUT

@@ -2,6 +2,10 @@
 
 A minimal Python Flask app with a full CI/CD pipeline using GitHub Actions.
 
+[![Main-pipeline](https://github.com/bhutesoham/github-action-capstone/actions/workflows/main-pipeline.yml/badge.svg?branch=main&event=push)](https://github.com/bhutesoham/github-action-capstone/actions/workflows/main-pipeline.yml)
+
+[![health-check](https://github.com/bhutesoham/github-action-capstone/actions/workflows/health-check.yml/badge.svg?branch=main&event=workflow_dispatch)](https://github.com/bhutesoham/github-action-capstone/actions/workflows/health-check.yml)
+
 ## App
 
 One endpoint: `GET /health` — returns a JSON health check response.
@@ -31,24 +35,24 @@ github-actions-capstone/
 
 The workflow runs on every push and PR to `main`:
 
-| Job | Trigger | What it does |
-|-----|---------|--------------|
-| **Lint** | Every push/PR | Runs `flake8` on app and tests |
-| **Test** | After lint passes | Runs `pytest` |
-| **Build** | After tests pass | Builds & pushes Docker image to Docker Hub |
+| Job        | Trigger                  | What it does                                 |
+| ---------- | ------------------------ | -------------------------------------------- |
+| **Lint**   | Every push/PR            | Runs `flake8` on app and tests               |
+| **Test**   | After lint passes        | Runs `pytest`                                |
+| **Build**  | After tests pass         | Builds & pushes Docker image to Docker Hub   |
 | **Deploy** | After build, `main` only | SSHs into server, pulls & restarts container |
 
 ## Required GitHub Secrets
 
 Set these in **Settings → Secrets and variables → Actions**:
 
-| Secret | Description |
-|--------|-------------|
-| `DOCKER_USERNAME` | Your Docker Hub username |
-| `DOCKER_PASSWORD` | Your Docker Hub access token |
-| `SSH_HOST` | IP or hostname of your deploy server |
-| `SSH_USER` | SSH username on the server |
-| `SSH_PRIVATE_KEY` | Private key for SSH access |
+| Secret            | Description                          |
+| ----------------- | ------------------------------------ |
+| `DOCKER_USERNAME` | Your Docker Hub username             |
+| `DOCKER_PASSWORD` | Your Docker Hub access token         |
+| `SSH_HOST`        | IP or hostname of your deploy server |
+| `SSH_USER`        | SSH username on the server           |
+| `SSH_PRIVATE_KEY` | Private key for SSH access           |
 
 ## Run Locally
 

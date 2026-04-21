@@ -2,7 +2,7 @@ name: health-check
 
 on:
   schedule:
-    - cron: "0 */1 * * *" #min hrs dayofmonth month dayofweek
+    - cron: "0 * */1 * *" #min hrs dayofmonth month dayofweek
 
   workflow_dispatch:
     inputs:
